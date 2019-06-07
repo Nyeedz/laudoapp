@@ -1,0 +1,23 @@
+.ambiente {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.mt-2 {
+  margin-top: 2rem;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.thumb-fachada {
+  margin: 15px -16px;
+  height: auto;
+
+  img {
+    width: 100%;
+    height: auto;
+  }
+}

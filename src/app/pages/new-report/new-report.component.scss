@@ -1,0 +1,14 @@
+.tutorial {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin-right: 1rem;
+  .tutorial-image {
+    margin-top: 25px;
+    width: 100%;
+  }
+  .tutorial-text {
+    font-size: 16px;
+  }
+}

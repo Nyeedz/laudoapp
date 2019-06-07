@@ -1,0 +1,93 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>
+      <span>{{ data ? "Editar ambiente" : "Novo ambiente" }}</span>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="fachada-nome">
+    <div class="title">
+      Nome do ambiente
+    </div>
+    <form [formGroup]="form">
+      <ion-item>
+        <ion-label position="floating">Nome</ion-label>
+        <ion-input formControlName="nome"></ion-input>
+      </ion-item>
+    </form>
+  </div>
+  <div class="fachada-area">
+    <div class="title">
+      Foto de fachada
+    </div>
+    <div class="thumb-fachada" *ngIf="fotoFachada !== null; else imageTemplate">
+      <!-- <img [src]="(typeof fotoFachada == 'object') ? 'http://localhost:1337' + fotoFachada.url : fotoFachada" /> -->
+    </div>
+    <ion-button
+      class="mt-2"
+      expand="full"
+      color="primary"
+      (click)="selectImage()"
+    >
+      <ion-icon name="camera" slot="start"></ion-icon
+      >{{ fotoFachada ? "Trocar" : "Enviar" }} foto</ion-button
+    >
+  </div>
+  <div class="itens-area">
+    <div class="header">
+      <ion-label>Itens do ambiente</ion-label>
+      <ion-button color="primary" (click)="addItem()">Adicionar</ion-button>
+    </div>
+    <ion-list>
+      <ion-list-header>
+        <ion-label
+          >{{ itens.length }}
+          {{ itens.length === 1 ? "Item" : "Itens" }}</ion-label
+        >
+      </ion-list-header>
+      <ion-item-sliding *ngFor="let item of itens; let i = index">
+        <ion-item-options side="start">
+          <ion-item-option (click)="removeItem(item)" color="danger" expandable>
+            Excluir
+          </ion-item-option>
+        </ion-item-options>
+
+        <ion-item>
+          <ion-label>{{ item.nome }}</ion-label>
+          <ion-note slot="end"
+            >{{ item.fotos.length }}
+            {{ item.fotos.length > 1 ? "fotos" : "foto" }}</ion-note
+          >
+        </ion-item>
+
+        <ion-item-options side="end">
+          <ion-item-option (click)="editItem(item)" color="tertiary" expandable>
+            Editar
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="back(false)" color="danger">
+        Cancelar
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="back(true)" color="primary">
+        Confirmar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>
+
+<ng-template #imageTemplate>
+  <div class="image-placeholder">
+    <ion-icon size="large" name="image"></ion-icon>
+  </div>
+</ng-template>

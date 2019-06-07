@@ -1,19 +1,24 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
+import { VistoriasComponent } from './pages/vistorias/vistorias.component';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: 'vistorias',
     pathMatch: 'full'
   },
   {
-    path: 'home',
-    loadChildren: './home/home.module#HomePageModule'
+    path: 'login',
+    loadChildren: './pages/login/login.module#LoginModule'
   },
   {
-    path: 'list',
-    loadChildren: './list/list.module#ListPageModule'
+    path: 'vistorias',
+    component: VistoriasComponent
+  },
+  {
+    path: 'laudo',
+    loadChildren: './pages/laudo/laudo.module#LaudoModule'
   }
 ];
 

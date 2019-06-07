@@ -1,0 +1,22 @@
+<ion-toolbar color="primary">
+  <ion-title>
+    <span translate>Reports</span>
+  </ion-title>
+</ion-toolbar>
+<ion-content>
+  <ion-list>
+    <ion-item *ngFor="let laudo of laudos; let i = index" (click)="editReport(i)">
+      <ion-label text-wrap>
+        <ion-text [color]="laudo.saved ? 'primary' : 'warn'">
+          <h3>{{ laudo.data }}</h3>
+        </ion-text>
+        <p>{{ laudo.ambientes.length }} {{ laudo.ambientes.length == 1 ? 'Ambiente' : 'Ambientes' }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
+<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab-button (click)="newReport()">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>

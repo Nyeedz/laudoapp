@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>
+      <span>Vistorias</span>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <ion-refresher
+    slot="fixed"
+    pullFactor="0.5"
+    pullMin="100"
+    pullMax="200"
+    (ionRefresh)="loadVistorias($event)"
+  >
+    <ion-refresher-content></ion-refresher-content>
+  </ion-refresher>
+  <ion-list>
+    <ion-item
+      *ngFor="let vistoria of vistorias; let i = index"
+      (click)="goToLaudo(vistoria)"
+    >
+      <ion-label text-wrap>
+        <ion-text color="primary">
+          <h3>{{ vistoria.visita | date }}</h3>
+        </ion-text>
+        <p>
+          {{ vistoria.solicitacoes?.length }}
+          {{
+            vistoria.solicitacoes?.length == 1 ? "Solicitacão" : "Solicitacões"
+          }}
+        </p>
+      </ion-label>
+      <ion-note slot="end">{{ vistoria.status }}</ion-note>
+    </ion-item>
+  </ion-list>
+</ion-content>

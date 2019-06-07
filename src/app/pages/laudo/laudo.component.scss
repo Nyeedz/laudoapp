@@ -1,0 +1,19 @@
+.button-group {
+  display: flex;
+  justify-content: space-evenly;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  position: fixed;
+  z-index: 2;
+  width: 100%;
+  background: white;
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+}
+
+.margin-list {
+  margin-top: 5em;
+
+  &.ios {
+    margin-top: 6em;
+  }
+}

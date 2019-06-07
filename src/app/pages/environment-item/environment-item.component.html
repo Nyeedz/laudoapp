@@ -1,0 +1,43 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>
+      <span translate>Novo item</span>
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+<ion-content padding>
+  <form [formGroup]="form">
+    <ion-item>
+      <ion-label position="floating">Nome do item</ion-label>
+      <ion-input formControlName="nome"></ion-input>
+    </ion-item>
+    <ion-item class="add-fotos mt-2">
+      <ion-label>Fotos:</ion-label>
+      <ion-button type="button" color="primary" (click)="selectImage()">Adicionar</ion-button>
+    </ion-item>
+  </form>
+
+  <div class="foto-grid">
+    <div *ngFor="let foto of fotos; let i = index" class="foto">
+      <img [src]="foto" alt="" />
+      <ion-button (click)="removeFoto(i)" class="remove" color="danger">
+        <ion-icon slot="icon-only" name="trash"></ion-icon>
+      </ion-button>
+    </div>
+  </div>
+</ion-content>
+
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="back(false)" color="danger">
+        Cancelar
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button (click)="back(true)" color="primary">
+        Confirmar
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

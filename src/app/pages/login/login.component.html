@@ -1,0 +1,18 @@
+<ion-content padding>
+  <div class="title">Bem vindo,</div>
+  <div class="subtitle">Faça login para continuar</div>
+
+  <form class="login-form" [formGroup]="form" (submit)="submit($event)">
+    <ion-item no-padding>
+      <ion-label position="floating">Usuário</ion-label>
+      <ion-input formControlName="identifier"></ion-input>
+    </ion-item>
+    <ion-item no-padding>
+      <ion-label position="floating">Senha</ion-label>
+      <ion-input formControlName="password" type="password"></ion-input>
+    </ion-item>
+    <ion-button type="submit" class="login-button" color="primary"
+      >Entrar</ion-button
+    >
+  </form>
+</ion-content>

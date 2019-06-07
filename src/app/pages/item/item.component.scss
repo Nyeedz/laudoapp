@@ -1,0 +1,61 @@
+ion-content {
+  background: #e5e5e5;
+}
+
+.fachada-area {
+  padding-bottom: 2em;
+  padding-top: 1em;
+  background: #e5e5e5;
+
+  .title {
+    text-align: center;
+    font-size: 1.5em;
+    color: black;
+  }
+
+  .thumb-fachada {
+    height: 250px;
+    margin-top: 1em;
+
+    img {
+      width: 100%;
+      border: 0;
+      object-fit: cover;
+      height: 100%;
+    }
+  }
+
+  .image-placeholder {
+    height: 250px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #e5e5e5;
+  }
+}
+
+.itens-area {
+  background: white;
+  padding-top: 1em;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  position: relative;
+  width: 100%;
+  top: -10px;
+
+  .header {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+}
+
+.foto {
+  position: relative;
+
+  ion-button {
+    position: fixed;
+    right: 25px;
+  }
+}
