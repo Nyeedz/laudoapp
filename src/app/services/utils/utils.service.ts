@@ -23,7 +23,7 @@ export class UtilsService {
     const blob = new Blob([int8Array], { type });
     const imageFile = new File([blob], 'fachada', { type });
 
-    console.log(imageFile)
+    console.log(imageFile);
     return imageFile;
   }
 
@@ -39,7 +39,13 @@ export class UtilsService {
     }
   }
 
-  makeFileFormData(ref: string, refId: string, field: string, file: any, multiFile: boolean = false) {
+  makeFileFormData(
+    ref: string,
+    refId: string,
+    field: string,
+    file: any,
+    multiFile: boolean = false
+  ) {
     const formData = new FormData();
     formData.append('ref', ref);
     formData.append('refId', refId);
@@ -48,16 +54,22 @@ export class UtilsService {
     if (multiFile) {
       file.forEach(f => formData.append('files[]', f));
     } else {
-      formData.append('files', file)
+      formData.append('files', file);
     }
     return formData;
   }
 
   async upload(formData: FormData) {
-    console.log(formData)
     const url = environment.apiUrl + 'upload';
     const headers = await this.authService.authHeaders();
 
     return this.http.post<any>(url, formData, { headers }).toPromise();
+  }
+
+  async deleteFile(id: string) {
+    const url = environment.apiUrl + 'upload/files/' + id;
+    const headers = await this.authService.authHeaders();
+
+    return this.http.delete<any>(url, { headers }).toPromise();
   }
 }

@@ -8,14 +8,17 @@ import {
 import { WebView } from '@ionic-native/ionic-webview/ngx';
 import {
   ActionSheetController,
+  AlertController,
   ModalController,
   ToastController
 } from '@ionic/angular';
 import { ActionSheetOptions } from '@ionic/core';
+import { AmbienteService } from '../../services/ambiente/ambiente.service';
 import { ItemService } from '../../services/item/item.service';
 import { UtilsService } from '../../services/utils/utils.service';
 import { Ambiente } from '../../shared/entities/ambiente';
 import { ItemAmbiente } from '../../shared/entities/item-ambiente';
+import { Laudo } from '../../shared/entities/laudo';
 import { ItemComponent } from '../item/item.component';
 
 @Component({
@@ -24,7 +27,8 @@ import { ItemComponent } from '../item/item.component';
   styleUrls: ['./ambiente.component.scss']
 })
 export class AmbienteComponent implements OnInit {
-  @Input() data: Ambiente;
+  @Input() ambiente: Ambiente;
+  @Input() laudo: Laudo;
   form: FormGroup;
   fotoFachada: any;
   itens: ItemAmbiente[] = [];
@@ -34,7 +38,9 @@ export class AmbienteComponent implements OnInit {
     private webview: WebView,
     private actionSheetController: ActionSheetController,
     private toastController: ToastController,
+    private alertController: AlertController,
     private itemService: ItemService,
+    private ambienteService: AmbienteService,
     private utilsService: UtilsService,
     private formBuilder: FormBuilder,
     public modalController: ModalController
@@ -45,46 +51,122 @@ export class AmbienteComponent implements OnInit {
       nome: ['', Validators.required]
     });
 
-    if (this.data) {
-      this.fotoFachada = this.data.fotoFachada;
+    if (this.ambiente) {
       this.loadItens();
       this.form.patchValue({
-        nome: this.data.nome
+        nome: this.ambiente.nome
       });
     }
   }
 
   async loadItens() {
     try {
-      const res = await this.itemService.findByAmbiente(this.data._id);
+      const res = await this.itemService.findByAmbiente(this.ambiente._id);
       this.itens = res;
     } catch (err) {
       console.log(err);
     }
   }
 
-  async addItem() {
-    const modal = await this.modalController.create({
-      component: ItemComponent
-    });
+  async saveAmbiente() {
+    try {
+      const { nome } = this.form.getRawValue();
+      if (this.form.invalid) {
+        const toast = await this.toastController.create({
+          message: 'Insira o nome do ambiente',
+          duration: 2000,
+          position: 'top'
+        });
 
-    await modal.present();
-    const { data } = await modal.onDidDismiss();
-
-    if (data) {
-      console.log(data);
-
-      if (this.data) {
-        this.saveItemToDatabase(data);
-      } else {
-        this.itens.push(data);
+        return toast.present();
       }
+
+      if (this.ambiente) {
+        const ambiente = await this.ambienteService.update(
+          {
+            nome
+          },
+          this.ambiente._id
+        );
+
+        if (this.fotoFachada) {
+          this.saveFotoFachada(this.fotoFachada);
+        }
+      } else {
+        const ambiente = await this.ambienteService.create({
+          nome,
+          laudo: this.laudo._id
+        });
+
+        this.ambiente = ambiente;
+
+        if (this.fotoFachada) {
+          this.saveFotoFachada(this.fotoFachada);
+        }
+      }
+
+      console.log(this.ambiente);
+      console.log(this.laudo);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async addItem() {
+    try {
+      if (!this.ambiente) {
+        const toast = await this.toastController.create({
+          message: 'É necessário salvar o ambiente',
+          duration: 2000,
+          position: 'top'
+        });
+
+        return toast.present();
+      }
+
+      const modal = await this.modalController.create({
+        component: ItemComponent
+      });
+
+      await modal.present();
+      const { data } = await modal.onDidDismiss();
+
+      if (data) {
+        this.saveItemToDatabase(data);
+      }
+    } catch (err) {
+      console.log(err);
     }
   }
 
   async removeItem(item: any) {
-    await this.itemService.delete(item._id);
-    this.loadItens();
+    try {
+      const alert = await this.alertController.create({
+        header: 'Deseja excluir o item?',
+        message: 'Esta ação é <strong>irreversível</strong>!!!',
+        buttons: [
+          {
+            text: 'Cancelar',
+            role: 'cancel',
+            cssClass: 'secondary',
+            handler: blah => {
+              console.log('Confirm Cancel: blah');
+            }
+          },
+          {
+            text: 'Confirmar',
+            handler: async () => {
+              await this.itemService.delete(item._id);
+              this.loadItens();
+            }
+          }
+        ]
+      });
+
+      await alert.present();
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async editItem(item: any) {
@@ -100,17 +182,11 @@ export class AmbienteComponent implements OnInit {
       const { data } = await modal.onDidDismiss();
 
       if (data) {
-        if (this.data) {
-          const updatedItem = await this.itemService.update(
-            { nome: data.nome },
-            item._id
-          );
-          this.loadItens();
-          console.log(updatedItem);
-        } else {
-          console.log(data)
-          console.log(this.itens)
-        }
+        const updatedItem = await this.itemService.update(
+          { nome: data.nome },
+          item._id
+        );
+        this.loadItens();
       }
     } catch (err) {
       console.log(err);
@@ -172,6 +248,21 @@ export class AmbienteComponent implements OnInit {
     );
   }
 
+  async saveFotoFachada(URI: string) {
+    try {
+      const formData = this.utilsService.makeFileFormData(
+        'itens',
+        this.ambiente._id,
+        'fotos',
+        this.utilsService.dataURItoFile(URI)
+      );
+
+      await this.utilsService.upload(formData);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   async selectImage() {
     const options: ActionSheetOptions = {
       header: 'Escolha uma opção',
@@ -202,7 +293,7 @@ export class AmbienteComponent implements OnInit {
     try {
       const itemRes = await this.itemService.create({
         nome: data.nome,
-        ambiente: this.data._id
+        ambiente: this.ambiente._id
       });
 
       const filePromises = data.fotos.map(foto => {

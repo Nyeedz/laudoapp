@@ -1,10 +1,20 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Camera, CameraOptions, PictureSourceType } from '@ionic-native/camera/ngx';
+import {
+  Camera,
+  CameraOptions,
+  PictureSourceType
+} from '@ionic-native/camera/ngx';
 import { WebView } from '@ionic-native/ionic-webview/ngx';
-import { ActionSheetController, ModalController, ToastController } from '@ionic/angular';
+import {
+  ActionSheetController,
+  ModalController,
+  ToastController
+} from '@ionic/angular';
 import { ActionSheetOptions } from '@ionic/core';
 import { ItemAmbiente } from 'src/app/shared/entities/item-ambiente';
+import { ItemService } from 'src/app/services/item/item.service';
+import { UtilsService } from 'src/app/services/utils/utils.service';
 
 @Component({
   selector: 'app-item',
@@ -25,6 +35,8 @@ export class ItemComponent implements OnInit {
     private actionSheetController: ActionSheetController,
     private toastController: ToastController,
     private formBuilder: FormBuilder,
+    private itemService: ItemService,
+    private utilsService: UtilsService,
     public modalController: ModalController
   ) {}
 
@@ -34,7 +46,7 @@ export class ItemComponent implements OnInit {
     });
 
     if (this.data) {
-      console.log(this.data)
+      console.log(this.data);
       this.form.patchValue({ nome: this.data.nome });
       this.fotos = this.data.fotos;
     }
@@ -52,8 +64,17 @@ export class ItemComponent implements OnInit {
     );
   }
 
-  removeFoto(index: number) {
-    this.fotos.splice(index, 1);
+  async removeFoto(index: number) {
+    try {
+      if (this.data) {
+        const foto = this.fotos[index];
+        await this.utilsService.deleteFile(foto._id);
+      }
+
+      this.fotos.splice(index, 1);
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   takePicture(sourceType: PictureSourceType) {
@@ -67,8 +88,15 @@ export class ItemComponent implements OnInit {
 
     this.camera.getPicture(options).then(
       imagePath => {
-        console.log(imagePath)
-        // this.fotos.push(`data:image/jpeg;base64,${imagePath}`);
+        if (!imagePath) {
+          return;
+        }
+
+        if (this.data) {
+          this.saveItemPicture(`data:image/jpeg;base64,${imagePath}`);
+        } else {
+          this.fotos.push(`data:image/jpeg;base64,${imagePath}`);
+        }
       },
       err => {
         console.log(err);
@@ -100,5 +128,20 @@ export class ItemComponent implements OnInit {
     };
     const actionSheet = await this.actionSheetController.create(options);
     await actionSheet.present();
+  }
+
+  async saveItemPicture(URI: string) {
+    try {
+      const formData = this.utilsService.makeFileFormData(
+        'itens',
+        this.data._id,
+        'fotos',
+        this.utilsService.dataURItoFile(URI)
+      );
+
+      await this.utilsService.upload(formData);
+    } catch (err) {
+      console.log(err);
+    }
   }
 }

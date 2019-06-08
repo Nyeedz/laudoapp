@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar color="primary">
     <ion-title>
-      <span>{{ data ? "Editar ambiente" : "Novo ambiente" }}</span>
+      <span>{{ ambiente ? "Editar ambiente" : "Novo ambiente" }}</span>
     </ion-title>
   </ion-toolbar>
 </ion-header>
@@ -21,8 +21,8 @@
     <div class="title">
       Foto de fachada
     </div>
-    <div class="thumb-fachada" *ngIf="fotoFachada !== null; else imageTemplate">
-      <!-- <img [src]="(typeof fotoFachada == 'object') ? 'http://localhost:1337' + fotoFachada.url : fotoFachada" /> -->
+    <div class="thumb-fachada" *ngIf="ambiente || fotoFachada !== null; else imageTemplate">
+      <img [src]="ambiente ? 'http://localhost:1337' + ambiente.fotoFachada.url : fotoFachada"  />
     </div>
     <ion-button
       class="mt-2"
@@ -31,13 +31,13 @@
       (click)="selectImage()"
     >
       <ion-icon name="camera" slot="start"></ion-icon
-      >{{ fotoFachada ? "Trocar" : "Enviar" }} foto</ion-button
+      >{{ ambiente || fotoFachada ? "Trocar" : "Enviar" }} foto</ion-button
     >
   </div>
   <div class="itens-area">
     <div class="header">
       <ion-label>Itens do ambiente</ion-label>
-      <ion-button color="primary" (click)="addItem()">Adicionar</ion-button>
+      <ion-button [color]="this.ambiente ? 'primary' : 'danger'" (click)="addItem()">Adicionar</ion-button>
     </div>
     <ion-list>
       <ion-list-header>
@@ -75,12 +75,13 @@
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-button (click)="back(false)" color="danger">
-        Cancelar
+        Fechar
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button (click)="back(true)" color="primary">
-        Confirmar
+      <ion-button (click)="saveAmbiente(true)" color="primary">
+        Salvar
+        <ion-icon style="margin-left: .5em;" name="save"></ion-icon>
       </ion-button>
     </ion-buttons>
   </ion-toolbar>
