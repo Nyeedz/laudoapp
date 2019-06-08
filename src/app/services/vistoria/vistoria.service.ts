@@ -17,22 +17,25 @@ export class VistoriaService {
   }
 
   async findMine() {
-    const url = environment.apiUrl + 'vistorias?user=' + this.authService.userValue.id;
+    const url =
+      environment.apiUrl + 'vistorias?user=' + this.authService.userValue.id;
     const headers = await this.authService.authHeaders();
-    return this.http
-      .get<any>(url, { headers })
-      .toPromise();
+    return this.http.get<any>(url, { headers }).toPromise();
   }
 
   count() {
     const url = environment.apiUrl + 'vistorias/count';
-
     return this.http.get(url).toPromise();
   }
 
   create(vistoria: any) {
     const url = environment.apiUrl + 'vistorias';
-
     return this.http.post(url, vistoria).toPromise();
+  }
+
+  async update(vistoria: any, id: string) {
+    const url = environment.apiUrl + 'vistorias/' + id;
+    const headers = await this.authService.authHeaders();
+    return this.http.put<Vistoria>(url, vistoria, { headers }).toPromise();
   }
 }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ToastController } from '@ionic/angular';
+import { NavController, ToastController } from '@ionic/angular';
 import { AuthService } from '../../services/auth/auth.service';
 
 @Component({
@@ -15,8 +15,9 @@ export class LoginComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
+    private router: Router,
+    private navController: NavController,
     public toastController: ToastController,
-    private router: Router
   ) {}
 
   ngOnInit() {
@@ -43,7 +44,7 @@ export class LoginComponent implements OnInit {
 
       const user = this.form.getRawValue();
       const res = await this.authService.login(user).toPromise();
-      console.log(res);
+      this.navController.navigateRoot('/')
     } catch (err) {
       this.presentToast(`❌ ${err.error.message}`);
     }

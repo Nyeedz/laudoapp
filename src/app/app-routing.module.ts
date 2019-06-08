@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { PreloadAllModules, RouterModule, Routes } from '@angular/router';
 import { VistoriasComponent } from './pages/vistorias/vistorias.component';
+import { AuthGuard } from './shared/guards/auth.guard';
 
 const routes: Routes = [
   {
@@ -14,11 +15,13 @@ const routes: Routes = [
   },
   {
     path: 'vistorias',
-    component: VistoriasComponent
+    component: VistoriasComponent,
+    canActivate: [AuthGuard]
   },
   {
     path: 'laudo',
-    loadChildren: './pages/laudo/laudo.module#LaudoModule'
+    loadChildren: './pages/laudo/laudo.module#LaudoModule',
+    canActivate: [AuthGuard]
   }
 ];
 

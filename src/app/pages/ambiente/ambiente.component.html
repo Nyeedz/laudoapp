@@ -21,8 +21,16 @@
     <div class="title">
       Foto de fachada
     </div>
-    <div class="thumb-fachada" *ngIf="ambiente || fotoFachada !== null; else imageTemplate">
-      <img [src]="ambiente ? 'http://localhost:1337' + ambiente.fotoFachada.url : fotoFachada"  />
+    <div class="thumb-fachada" *ngIf="editandoFoto">
+      <img [src]="fotoFachada" alt="" />
+    </div>
+    <div class="thumb-fachada" *ngIf="!editandoFoto && ambiente">
+      <img [src]="ambiente.fotoFachada ? 'http://10.0.2.2:1337' + ambiente.fotoFachada.url : ''" alt="" />
+    </div>
+    <div class="thumb-fachada" *ngIf="!editandoFoto && !ambiente">
+      <div class="image-placeholder">
+        <ion-icon size="large" name="image"></ion-icon>
+      </div>
     </div>
     <ion-button
       class="mt-2"
@@ -37,7 +45,11 @@
   <div class="itens-area">
     <div class="header">
       <ion-label>Itens do ambiente</ion-label>
-      <ion-button [color]="this.ambiente ? 'primary' : 'danger'" (click)="addItem()">Adicionar</ion-button>
+      <ion-button
+        [color]="this.ambiente ? 'primary' : 'danger'"
+        (click)="addItem()"
+        >Adicionar</ion-button
+      >
     </div>
     <ion-list>
       <ion-list-header>
@@ -86,9 +98,3 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-footer>
-
-<ng-template #imageTemplate>
-  <div class="image-placeholder">
-    <ion-icon size="large" name="image"></ion-icon>
-  </div>
-</ng-template>

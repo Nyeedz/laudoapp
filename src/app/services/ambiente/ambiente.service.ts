@@ -27,6 +27,13 @@ export class AmbienteService {
     return this.http.get<Ambiente[]>(url, { headers }).toPromise();
   }
 
+  async findById(id: string) {
+    const url = environment.apiUrl + 'ambientes/' + id;
+    const headers = await this.authService.authHeaders();
+
+    return this.http.get<Ambiente>(url, { headers }).toPromise();
+  }
+
   async count() {
     const url = environment.apiUrl + 'ambientes/count';
     const headers = await this.authService.authHeaders();

@@ -32,7 +32,7 @@ export class AuthService {
         if (res && res.jwt) {
           this.storage.set('user', res.user);
           this.storage.set('jwt', res.jwt);
-          this.user$.next(res.jwt);
+          this.user$.next(res.user);
           this._token = res.jwt;
         }
 

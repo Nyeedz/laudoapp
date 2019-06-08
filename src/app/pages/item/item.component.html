@@ -19,7 +19,7 @@
 
   <div class="foto-grid">
     <div *ngFor="let foto of fotos; let i = index" class="foto">
-      <img [src]="foto.url ? 'http://localhost:1337' + foto.url : foto" alt="" />
+      <img [src]="foto.url ? 'http://10.0.2.2:1337' + foto.url : foto" alt="" />
       <ion-button (click)="removeFoto(i)" class="remove" color="danger">
         <ion-icon slot="icon-only" name="trash"></ion-icon>
       </ion-button>

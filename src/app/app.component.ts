@@ -22,10 +22,6 @@ export class AppComponent {
     this.initializeApp();
     this.authService.user.subscribe(user => {
       this.isLoggedIn = !!user;
-
-      // if (user) {
-      //   this.router.navigate(['/reports']);
-      // }
     });
   }
 

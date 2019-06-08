@@ -11,6 +11,7 @@ import { AuthService } from '../../services/auth/auth.service';
 import { VistoriaService } from '../../services/vistoria/vistoria.service';
 import { Vistoria } from '../../shared/entities/vistoria';
 import { StatusEnum } from '../../shared/enums/status.enum';
+import { User } from '../../shared/entities/user';
 
 @Component({
   selector: 'app-vistorias',
@@ -18,8 +19,9 @@ import { StatusEnum } from '../../shared/enums/status.enum';
   styleUrls: ['./vistorias.component.scss']
 })
 export class VistoriasComponent implements OnInit {
-  userSubscription: Subscription;
+  public userSubscription: Subscription;
   public vistorias: Vistoria[] = [];
+  public user: User;
 
   constructor(
     private storage: Storage,
@@ -35,9 +37,16 @@ export class VistoriasComponent implements OnInit {
     this.createSubscription();
   }
 
+  ionViewDidEnter() {
+    if (this.user) {
+      this.loadVistorias();
+    }
+  }
+
   createSubscription() {
     this.userSubscription = this.authService.user.subscribe(user => {
       if (user) {
+        this.user = user
         this.loadVistorias();
       }
     });
@@ -54,7 +63,7 @@ export class VistoriasComponent implements OnInit {
 
   goToLaudo(vistoria: Vistoria) {
     if (vistoria.status !== StatusEnum.Aberto) {
-      return this.alert('Não é possível editar esta vistoria', '❕ ');
+      return this.alert('Só é possível editar vistorias "Em Aberto"', '❕ ');
     }
 
     const navigationExtras: NavigationExtras = {
@@ -74,5 +83,10 @@ export class VistoriasComponent implements OnInit {
       duration: 2000
     });
     toast.present();
+  }
+
+  logout() {
+    this.authService.logout();
+    this.navController.navigateRoot('/login')
   }
 }

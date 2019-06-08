@@ -30,7 +30,8 @@ export class AmbienteComponent implements OnInit {
   @Input() ambiente: Ambiente;
   @Input() laudo: Laudo;
   form: FormGroup;
-  fotoFachada: any;
+  fotoFachada: string;
+  editandoFoto: boolean = false;
   itens: ItemAmbiente[] = [];
 
   constructor(
@@ -52,6 +53,7 @@ export class AmbienteComponent implements OnInit {
     });
 
     if (this.ambiente) {
+      console.log(this.ambiente)
       this.loadItens();
       this.form.patchValue({
         nome: this.ambiente.nome
@@ -89,7 +91,7 @@ export class AmbienteComponent implements OnInit {
           this.ambiente._id
         );
 
-        if (this.fotoFachada) {
+        if (this.fotoFachada && this.editandoFoto) {
           this.saveFotoFachada(this.fotoFachada);
         }
       } else {
@@ -105,8 +107,13 @@ export class AmbienteComponent implements OnInit {
         }
       }
 
-      console.log(this.ambiente);
-      console.log(this.laudo);
+      const toast = await this.toastController.create({
+        message: 'Ambiente salvo!',
+        duration: 2000,
+        position: 'top'
+      });
+
+      return toast.present();
     } catch (err) {
       console.log(err);
     }
@@ -241,6 +248,7 @@ export class AmbienteComponent implements OnInit {
       imageData => {
         console.log(imageData);
         this.fotoFachada = `data:image/jpeg;base64,${imageData}`;
+        this.editandoFoto = true;
       },
       err => {
         console.log(err);
@@ -251,13 +259,16 @@ export class AmbienteComponent implements OnInit {
   async saveFotoFachada(URI: string) {
     try {
       const formData = this.utilsService.makeFileFormData(
-        'itens',
+        'ambientes',
         this.ambiente._id,
-        'fotos',
+        'fotoFachada',
         this.utilsService.dataURItoFile(URI)
       );
 
       await this.utilsService.upload(formData);
+      this.reloadAmbiente();
+      this.editandoFoto = false;
+      this.fotoFachada = null;
     } catch (err) {
       console.log(err);
     }
@@ -309,6 +320,17 @@ export class AmbienteComponent implements OnInit {
       this.loadItens();
     } catch (err) {
       console.log(err);
+    }
+  }
+
+  async reloadAmbiente() {
+    try {
+      if (this.ambiente) {
+        const ambiente = await this.ambienteService.findById(this.ambiente._id);
+        this.ambiente = ambiente;
+      }
+    } catch(err) {
+      console.log(err)
     }
   }
 }

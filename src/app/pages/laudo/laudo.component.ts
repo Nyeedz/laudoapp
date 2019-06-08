@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ModalController } from '@ionic/angular';
+import { ModalController, AlertController, NavController } from '@ionic/angular';
 import { Storage } from '@ionic/storage';
 import { AmbienteService } from '../../services/ambiente/ambiente.service';
 import { ItemService } from '../../services/item/item.service';
@@ -26,6 +26,8 @@ export class LaudoComponent implements OnInit {
 
   constructor(
     public modalController: ModalController,
+    public alertController: AlertController,
+    private navController: NavController,
     private storage: Storage,
     private vistoriaService: VistoriaService,
     private ambienteService: AmbienteService,
@@ -46,7 +48,51 @@ export class LaudoComponent implements OnInit {
   }
 
   async saveLaudo() {
-    console.log('salvando', this.vistoriaId)
+    try {
+      const vistoriaId = this.vistoriaId;
+
+      if (!vistoriaId) {
+        return;
+      }
+
+      const vistoria = await this.vistoriaService.update(
+        { status: 'Em andamento' },
+        vistoriaId
+      );
+
+      this.navController.pop();
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+  async showSaveDialog() {
+    try {
+      const alert = await this.alertController.create({
+        header: 'Deseja continuar?',
+        message:
+          'Ao confirmar, o laudo irá para análise e <strong>NÃO PODERÁ</strong> ser editado!!!',
+        buttons: [
+          {
+            text: 'Cancelar',
+            role: 'cancel',
+            handler: blah => {
+              console.log('Confirm Cancel: blah');
+            }
+          },
+          {
+            text: 'Confirmar',
+            handler: () => {
+              this.saveLaudo();
+            }
+          }
+        ]
+      });
+
+      await alert.present();
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   async addAmbiente() {
@@ -63,8 +109,8 @@ export class LaudoComponent implements OnInit {
 
       console.log(data);
       this.loadAmbientes();
-    } catch(err) {
-      console.log(err)
+    } catch (err) {
+      console.log(err);
     }
   }
 
@@ -84,7 +130,7 @@ export class LaudoComponent implements OnInit {
       console.log(data);
       this.loadAmbientes();
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
   }
 
@@ -94,7 +140,7 @@ export class LaudoComponent implements OnInit {
       console.log(res);
       this.loadAmbientes();
     } catch (err) {
-      console.log(err)
+      console.log(err);
     }
   }
 
