@@ -9,11 +9,12 @@ export class Vistoria {
   cep: string;
   cidade: string;
   createdAt: string;
+  laudo: any;
   endereco: string;
-  fachada: Fachada;
   numero: number;
   partes: any;
   solicitacoes: any[];
+  fotoCaracterizacao: any;
   tipos_laudo: string;
   updateAt: string;
   user: User;

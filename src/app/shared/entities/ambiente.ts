@@ -6,5 +6,6 @@ export class Ambiente {
   id:  string;
   fotoFachada: any;
   nome: string;
+  descricao: string;
   itens: ItemAmbiente[];
 }

@@ -1,19 +1,88 @@
 .button-group {
   display: flex;
   justify-content: space-evenly;
-  padding-top: 1em;
-  padding-bottom: 1em;
+  bottom: 0;
   position: fixed;
-  z-index: 2;
+  height: 50px;
   width: 100%;
+  z-index: 2;
   background: white;
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+  border-top: 1px solid rgba(0, 0, 0, .2);
+
+  & > button {
+    display: inline-flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    outline: none;
+    font-size: 12px;
+    background: transparent;
+    transition: all .2s ease-in-out;
+
+    ion-icon {
+      font-size: 22px;
+    }
+
+    &.selected, &:hover {
+      cursor: pointer;
+      color: var(--ion-color-primary, #3880ff) !important;
+    }
+  }
+}
+
+.caracterizacao-area {
+  padding-bottom: 2em;
+  padding-top: 1em;
+  background: #e5e5e5;
+
+  .title {
+    text-align: center;
+    font-size: 1.5em;
+    color: black;
+  }
+
+  .thumb-caracterizacao {
+    height: 250px;
+    margin-top: 1em;
+
+    img {
+      width: 100%;
+      border: 0;
+      object-fit: cover;
+      height: 100%;
+    }
+  }
+
+  .image-placeholder {
+    height: 250px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #e5e5e5;
+  }
 }
 
 .margin-list {
-  margin-top: 5em;
+  margin-bottom: 50px;
 
   &.ios {
-    margin-top: 6em;
+    margin-bottom: 50px;
+  }
+}
+
+.ambientes-area {
+  background: white;
+  padding-top: 1em;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  position: relative;
+  width: 100%;
+  top: -10px;
+
+  .header {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
   }
 }

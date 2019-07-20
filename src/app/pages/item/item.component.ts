@@ -12,9 +12,9 @@ import {
   ToastController
 } from '@ionic/angular';
 import { ActionSheetOptions } from '@ionic/core';
-import { ItemAmbiente } from 'src/app/shared/entities/item-ambiente';
 import { ItemService } from 'src/app/services/item/item.service';
 import { UtilsService } from 'src/app/services/utils/utils.service';
+import { ItemAmbiente } from 'src/app/shared/entities/item-ambiente';
 
 @Component({
   selector: 'app-item',
@@ -137,11 +137,10 @@ export class ItemComponent implements OnInit {
       );
 
       const upload = await this.utilsService.upload(formData);
-      const foto = { ...upload[0], url: '/uploads/' + upload[0].hash}
+      const foto = { ...upload[0], url: '/uploads/' + upload[0].hash };
       this.fotos.push(foto);
     } catch (err) {
       console.log(err);
     }
   }
-
 }

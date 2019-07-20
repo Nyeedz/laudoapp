@@ -9,84 +9,119 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <div class="button-group">
-    <ion-button
-      color="primary"
-      [fill]="visible == 'cadastrados' ? 'solid' : 'outline'"
-      (click)="visible = 'cadastrados'"
-      >Cadastrados</ion-button
-    >
-    <ion-button
-      color="primary"
-      [fill]="visible == 'rascunho' ? 'solid' : 'outline'"
-      (click)="visible = 'rascunho'"
-      >Rascunho</ion-button
-    >
-  </div>
   <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
     <ion-refresher-content></ion-refresher-content>
   </ion-refresher>
-  <ion-list class="margin-list" *ngIf="visible === 'cadastrados'">
-    <ion-item-sliding *ngFor="let ambiente of ambientes">
-      <ion-item-options side="start">
-        <ion-item-option
-          (click)="deleteAmbiente(ambiente)"
-          color="danger"
-          expandable
-        >
-          Excluir
-        </ion-item-option>
-        <ion-item-option
-          (click)="editAmbiente(ambiente)"
-          color="primary"
-          expandable
-        >
-          Editar
-        </ion-item-option>
-      </ion-item-options>
-      <ion-item>
-        <ion-label>
-          {{ ambiente.nome }}
-        </ion-label>
-        <ion-note slot="end">
-          {{ ambiente.itens.length }}
-          {{ ambiente.itens.length == 1 ? "Item" : "Itens" }}
-        </ion-note>
-      </ion-item>
-    </ion-item-sliding>
-  </ion-list>
-  <ion-list class="margin-list" *ngIf="visible === 'rascunho'">
-    <ion-item-sliding *ngFor="let ambiente of ambientesStorage">
-      <ion-item-options side="start">
-        <ion-item-option (click)="delete(ambiente)" color="danger" expandable>
-          Excluir
-        </ion-item-option>
-        <ion-item-option (click)="edit(ambiente)" color="primary" expandable>
-          Editar
-        </ion-item-option>
-      </ion-item-options>
-      <ion-item>
-        <ion-label>
-          {{ ambiente.nome }}
-        </ion-label>
-        <ion-note slot="end">
-          {{ ambiente.itens.length }}
-          {{ ambiente.itens.length == 1 ? "Item" : "Itens" }}
-        </ion-note>
-      </ion-item>
-    </ion-item-sliding>
-  </ion-list>
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button>
-      <ion-icon name="arrow-up"></ion-icon>
-    </ion-fab-button>
-    <ion-fab-list side="top">
-      <ion-fab-button (click)="addAmbiente()"
-        ><ion-icon name="add"></ion-icon>
-      </ion-fab-button>
-      <ion-fab-button (click)="showSaveDialog()"
-        ><ion-icon name="save"></ion-icon
-      ></ion-fab-button>
-    </ion-fab-list>
-  </ion-fab>
+  <div class="caracterizacao-area">
+    <div class="title">
+      Foto de caracterização do imóvel
+    </div>
+    <div class="thumb-caracterizacao" *ngIf="editandoFoto">
+      <img [src]="fotoCaracterizacao" alt="" />
+    </div>
+    <div class="thumb-caracterizacao" *ngIf="!editandoFoto && laudo">
+      <img
+        [src]="
+          laudo.vistoria.fotoCaracterizacao
+            ? 'http://191.252.59.5:7100' + laudo.vistoria.fotoCaracterizacao.url
+            : ''
+        "
+        alt=""
+      />
+    </div>
+    <div class="thumb-caracterizacao" *ngIf="!editandoFoto && !laudo">
+      <div class="image-placeholder">
+        <ion-icon size="large" name="image"></ion-icon>
+      </div>
+    </div>
+    <ion-button
+      class="mt-2"
+      expand="full"
+      color="primary"
+      (click)="selectImage()"
+    >
+      <ion-icon name="camera" slot="start"></ion-icon
+      >{{ laudo || fotoCaracterizacao ? "Trocar" : "Enviar" }} foto</ion-button
+    >
+  </div>
+  <div class="ambientes-area">
+    <div class="header">
+      <ion-label>Ambientes</ion-label>
+      <ion-button (click)="addAmbiente()" [color]="this.laudo ? 'primary' : 'danger'"
+        >Adicionar</ion-button
+      >
+    </div>
+    <ion-list class="margin-list" *ngIf="visible === 'cadastrados'">
+      <ion-item-sliding *ngFor="let ambiente of ambientes">
+        <ion-item-options side="start">
+          <ion-item-option
+            (click)="deleteAmbiente(ambiente)"
+            color="danger"
+            expandable
+          >
+            Excluir
+          </ion-item-option>
+          <ion-item-option
+            (click)="editAmbiente(ambiente)"
+            color="primary"
+            expandable
+          >
+            Editar
+          </ion-item-option>
+        </ion-item-options>
+        <ion-item>
+          <ion-label>
+            {{ ambiente.nome }}
+          </ion-label>
+          <ion-note slot="end">
+            {{ ambiente.itens.length }}
+            {{ ambiente.itens.length == 1 ? "Item" : "Itens" }}
+          </ion-note>
+        </ion-item>
+      </ion-item-sliding>
+    </ion-list>
+    <ion-list class="margin-list" *ngIf="visible === 'rascunho'">
+      <ion-item-sliding *ngFor="let ambiente of ambientesStorage">
+        <ion-item-options side="start">
+          <ion-item-option (click)="delete(ambiente)" color="danger" expandable>
+            Excluir
+          </ion-item-option>
+          <ion-item-option (click)="edit(ambiente)" color="primary" expandable>
+            Editar
+          </ion-item-option>
+        </ion-item-options>
+        <ion-item>
+          <ion-label>
+            {{ ambiente.nome }}
+          </ion-label>
+          <ion-note slot="end">
+            {{ ambiente.itens.length }}
+            {{ ambiente.itens.length == 1 ? "Item" : "Itens" }}
+          </ion-note>
+        </ion-item>
+      </ion-item-sliding>
+    </ion-list>
+  </div>
+  <div class="button-group">
+    <button
+      [class.selected]="visible == 'cadastrados'"
+      (click)="switchLists('cadastrados')"
+    >
+      <ion-icon name="cloud-done"></ion-icon>
+      <ion-label>Cadastrados</ion-label>
+    </button>
+
+    <button
+      [class.selected]="visible == 'rascunho'"
+      (click)="switchLists('rascunho')"
+    >
+      <ion-icon name="save"></ion-icon>
+      <ion-label>Rascunho</ion-label>
+    </button>
+  </div>
 </ion-content>
+<ion-fab vertical="top" horizontal="end" slot="fixed">
+  <ion-fab-button color="light" (click)="showSaveDialog()"
+    ><ion-icon name="save"></ion-icon
+  ></ion-fab-button>
+</ion-fab>

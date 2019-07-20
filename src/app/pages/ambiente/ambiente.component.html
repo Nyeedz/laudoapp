@@ -7,15 +7,19 @@
 </ion-header>
 <ion-content>
   <div class="fachada-nome">
-    <div class="title">
+    <p>
       Nome do ambiente
-    </div>
+    </p>
     <form [formGroup]="form">
       <ion-item>
         <ion-label position="floating">Nome</ion-label>
         <ion-input formControlName="nome"></ion-input>
       </ion-item>
     </form>
+    <p>Descrição do ambiente</p>
+    <ion-item>
+      <ckeditor [(ngModel)]="model.editorData" [editor]="editor"></ckeditor>
+    </ion-item>
   </div>
   <div class="fachada-area">
     <div class="title">
@@ -25,7 +29,14 @@
       <img [src]="fotoFachada" alt="" />
     </div>
     <div class="thumb-fachada" *ngIf="!editandoFoto && ambiente">
-      <img [src]="ambiente.fotoFachada ? 'http://10.0.2.2:1337' + ambiente.fotoFachada.url : ''" alt="" />
+      <img
+        [src]="
+          ambiente.fotoFachada
+            ? 'http://191.252.59.5:7100' + ambiente.fotoFachada.url
+            : ''
+        "
+        alt=""
+      />
     </div>
     <div class="thumb-fachada" *ngIf="!editandoFoto && !ambiente">
       <div class="image-placeholder">
@@ -91,7 +102,7 @@
       </ion-button>
     </ion-buttons>
     <ion-buttons slot="end">
-      <ion-button (click)="saveAmbiente(true)" color="primary">
+      <ion-button (click)="saveAmbiente()" color="primary">
         Salvar
         <ion-icon style="margin-left: .5em;" name="save"></ion-icon>
       </ion-button>

@@ -13,6 +13,7 @@ import {
   ToastController
 } from '@ionic/angular';
 import { ActionSheetOptions } from '@ionic/core';
+import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { AmbienteService } from '../../services/ambiente/ambiente.service';
 import { ItemService } from '../../services/item/item.service';
 import { UtilsService } from '../../services/utils/utils.service';
@@ -29,6 +30,10 @@ import { ItemComponent } from '../item/item.component';
 export class AmbienteComponent implements OnInit {
   @Input() ambiente: Ambiente;
   @Input() laudo: Laudo;
+  editor = ClassicEditor;
+  model = {
+    editorData: ''
+  }
   form: FormGroup;
   fotoFachada: string;
   editandoFoto: boolean = false;
@@ -52,12 +57,20 @@ export class AmbienteComponent implements OnInit {
       nome: ['', Validators.required]
     });
 
+    this.form.get('nome').valueChanges.subscribe(val => {
+      //coloca a funcao aqui pra ele executar sempre que esse controle em especifico mudar
+    })
+
+    console.log(this.laudo)
+
     if (this.ambiente) {
       console.log(this.ambiente)
       this.loadItens();
       this.form.patchValue({
         nome: this.ambiente.nome
       });
+
+      this.model.editorData = this.ambiente.descricao;
     }
   }
 
@@ -86,7 +99,8 @@ export class AmbienteComponent implements OnInit {
       if (this.ambiente) {
         const ambiente = await this.ambienteService.update(
           {
-            nome
+            nome,
+            descricao: this.model.editorData
           },
           this.ambiente._id
         );
@@ -97,7 +111,8 @@ export class AmbienteComponent implements OnInit {
       } else {
         const ambiente = await this.ambienteService.create({
           nome,
-          laudo: this.laudo._id
+          laudo: this.laudo._id,
+          descricao: this.model.editorData
         });
 
         this.ambiente = ambiente;
@@ -259,7 +274,7 @@ export class AmbienteComponent implements OnInit {
   async saveFotoFachada(URI: string) {
     try {
       const formData = this.utilsService.makeFileFormData(
-        'ambientes',
+        'ambiente',
         this.ambiente._id,
         'fotoFachada',
         this.utilsService.dataURItoFile(URI)

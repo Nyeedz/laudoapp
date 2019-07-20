@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { IonicModule } from '@ionic/angular';
 import { SharedModule } from '../../shared/shared.module';
 import { AmbienteComponent } from '../ambiente/ambiente.component';
@@ -18,7 +19,8 @@ import { ItemComponent } from '../item/item.component';
     SharedModule,
     CommonModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CKEditorModule
   ],
   entryComponents: [
     LaudoComponent,

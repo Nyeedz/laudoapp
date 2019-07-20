@@ -21,6 +21,12 @@ export class LaudoService {
     return this.http.get<any>(url, { headers }).toPromise();
   }
 
+  async findById(id: string) {
+    const url = environment.apiUrl + 'laudos/' + id;
+    const headers = await this.authService.authHeaders();
+    return this.http.get<any>(url, { headers }).toPromise();
+  }
+
   count() {
     const url = environment.apiUrl + 'laudos/count';
 

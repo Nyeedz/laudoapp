@@ -1,8 +1,8 @@
 const environment = {
   production: true,
   serverUrl: '/api',
-  apiUrl: 'https://laudoapi.herokuapp.com',
-  // apiUrl: 'http://localhost:1337',
+  apiUrl: "http://191.252.59.5:7100/",
+  // apiUrl: 'http://191.252.59.5:7100',
   viaCepUrl: 'https://viacep.com.br/ws',
   credenciadoId: '5ca2566e49130e1ee81180ba',
   contratanteId: '5ca2566e49130e1ee81180bb',

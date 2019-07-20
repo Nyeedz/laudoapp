@@ -1,8 +1,8 @@
 const environment = {
   production: false,
   serverUrl: '/api',
-  apiUrl: 'http://10.0.2.2:1337/',
-  // apiUrl: 'http://191.252.59.98:7200/',
+  // apiUrl: 'http://191.252.59.5:7100/',
+  apiUrl: "http://191.252.59.5:7100/",
   viaCepUrl: 'https://viacep.com.br/ws',
   credenciadoId: '5ca2566e49130e1ee81180ba',
   contratanteId: '5ca2566e49130e1ee81180bb',

@@ -34,7 +34,7 @@ export class VistoriasComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.createSubscription();
+    this.createUserSubscription();
   }
 
   ionViewDidEnter() {
@@ -43,18 +43,21 @@ export class VistoriasComponent implements OnInit {
     }
   }
 
-  createSubscription() {
+  createUserSubscription() {
     this.userSubscription = this.authService.user.subscribe(user => {
       if (user) {
-        this.user = user
+        this.user = user;
         this.loadVistorias();
       }
     });
   }
 
   async loadVistorias(event?: any) {
-    const res = await this.vistoriaService.findMine();
-    this.vistorias = res;
+    const res = await this.vistoriaService.find();
+
+    this.vistorias = res.filter(vistoria => {
+      return !(!vistoria.user || vistoria.user.id !== this.user.id);
+    });
 
     if (event) {
       event.target.complete();
@@ -66,15 +69,17 @@ export class VistoriasComponent implements OnInit {
       return this.alert('Só é possível editar vistorias "Em Aberto"', '❕ ');
     }
 
+    if (!vistoria.laudo) {
+      return this.alert('Erro ao acessar laudo', '❕ ');
+    }
+
     const navigationExtras: NavigationExtras = {
       queryParams: {
-        id: vistoria.id
+        id: vistoria.laudo._id
       }
     };
 
     this.navController.navigateForward('/laudo', navigationExtras);
-
-    console.log(vistoria);
   }
 
   async alert(message: string, prefix?: string) {
@@ -87,6 +92,6 @@ export class VistoriasComponent implements OnInit {
 
   logout() {
     this.authService.logout();
-    this.navController.navigateRoot('/login')
+    this.navController.navigateRoot('/login');
   }
 }

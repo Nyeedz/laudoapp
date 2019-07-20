@@ -19,16 +19,10 @@ import { ReportsComponent } from './reports.component';
     ReactiveFormsModule
   ],
   entryComponents: [
-    ReportsComponent,
-    NewReportComponent,
-    EnvironmentComponent,
-    EnvironmentItemComponent
+    ReportsComponent
   ],
   declarations: [
-    ReportsComponent,
-    NewReportComponent,
-    EnvironmentComponent,
-    EnvironmentItemComponent
+    ReportsComponent
   ]
 })
 export class ReportsModule {}
